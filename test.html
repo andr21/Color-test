@@ -1,0 +1,303 @@
+<!doctype html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Test</title>
+
+</head>
+
+<body>
+
+<!--<img id='myImage' src='Head-grey.png'/>-->
+<canvas id = "myCanvas"></canvas>
+<p>Skin</p>
+<button onclick="update(1)">White</button>
+<button onclick="update(2)">Brown</button>
+<br>
+<p>Hair</p>
+<button onclick="update(3)">Blonde</button>
+<button onclick="update(4)">Brown</button>
+<br>
+<br>
+<button onclick="reset()">Reset</button>
+
+  <script>
+
+
+  	var canvas = document.querySelector('#myCanvas');
+	ctx = canvas.getContext("2d");
+	canvas.width = 500;
+	canvas.height = 400;
+	canvas.style.background = "#202020";
+  	
+
+
+
+    var skin = {};
+    skin.white = {};
+    skin.white.light = {};
+    skin.white.mid = {};
+    skin.white.dark = {};
+
+    skin.brown = {};
+    skin.brown.light = {};
+    skin.brown.mid = {};
+    skin.brown.dark = {};
+
+    skin.white.light.r = 234;
+    skin.white.light.g = 200;
+    skin.white.light.b = 174;
+
+    skin.white.mid.r = 225;
+    skin.white.mid.g = 184;
+    skin.white.mid.b = 153;
+
+    skin.white.dark.r = 216;
+    skin.white.dark.g = 175;
+    skin.white.dark.b = 145;
+
+    skin.brown.light.r = 143;
+    skin.brown.light.g = 107;
+    skin.brown.light.b = 80;
+
+    skin.brown.mid.r = 131;
+    skin.brown.mid.g = 96;
+    skin.brown.mid.b = 69;
+
+    skin.brown.dark.r = 119;
+    skin.brown.dark.g = 84;
+    skin.brown.dark.b = 58;
+
+
+    var hair = {};
+    hair.brown = {};
+    hair.brown.light = {};
+    hair.brown.mid = {};
+    hair.brown.dark = {};
+
+    hair.blonde = {};
+    hair.blonde.light = {};
+    hair.blonde.mid = {};
+    hair.blonde.dark = {};
+
+    hair.brown.light.r = 125;
+    hair.brown.light.g = 75;
+    hair.brown.light.b = 41;
+
+    hair.brown.mid.r = 113;
+    hair.brown.mid.g = 65;
+    hair.brown.mid.b = 32;
+
+    hair.brown.dark.r = 101;
+    hair.brown.dark.g = 57;
+    hair.brown.dark.b = 26;
+
+    hair.blonde.light.r = 230;
+    hair.blonde.light.g = 207;
+    hair.blonde.light.b = 98;
+
+    hair.blonde.mid.r = 214;
+    hair.blonde.mid.g = 191;
+    hair.blonde.mid.b = 81;
+
+    hair.blonde.dark.r = 204;
+    hair.blonde.dark.g = 181;
+    hair.blonde.dark.b = 71;
+
+
+
+
+
+
+    function colorImage(imgElement,color) {
+        // create hidden canvas (using image dimensions)
+        var tempcanvas = document.createElement("canvas");
+        tempcanvas.width = imgElement.width;
+        tempcanvas.height = imgElement.height;
+
+        var tempctx = tempcanvas.getContext("2d");
+        tempctx.drawImage(imgElement,0,0);
+
+        //console.log(tempcanvas.width);
+        //console.log(tempcanvas.height);
+
+        var map = tempctx.getImageData(0,0,tempcanvas.width,tempcanvas.height);
+        var imdata = map.data;
+
+
+        var r,g,b,avg;
+        for(var p = 0, len = imdata.length; p < len; p+=4) {
+
+
+            r = imdata[p]
+            g = imdata[p+1];
+            b = imdata[p+2];
+
+
+
+            if(r == 100 && g == 100 && b == 100){
+            	imdata[p] = color.dark.r;
+            	imdata[p+1] = color.dark.g;
+            	imdata[p+2] = color.dark.b;
+
+            }
+
+
+            if(r == 150 && g == 150 && b == 150){
+            	imdata[p] = color.mid.r;
+            	imdata[p+1] = color.mid.g;
+            	imdata[p+2] = color.mid.b;
+
+            }
+
+            if(r == 200 && g == 200 && b == 200){
+            	imdata[p] = color.light.r;
+            	imdata[p+1] = color.light.g;
+            	imdata[p+2] = color.light.b;
+
+            }
+        }
+
+        tempctx.putImageData(map,0,0);
+
+        // replace image source with canvas data
+        imgElement.src = tempcanvas.toDataURL();
+        
+
+    }
+
+
+//setTimeout(
+
+
+  //colorImage(
+    //document.getElementById('myImage'),
+    //skin.brown // for a redish tint
+	//)
+
+
+//, 3000);
+
+
+
+
+
+var sources = {
+
+head: "Head-grey.png",
+hair: "Hair-grey.png",
+eyes: "eyesandmouth.png"
+
+}
+
+
+//loading images
+
+var loaded = false;
+
+var images = {};
+
+
+function loadImages(sources) {
+
+	var loadedImages = 0;
+	var numImages = 0;
+
+for(var src in sources) {
+	numImages++;
+}
+
+for(var src in sources) {
+
+	images[src] = new Image();
+
+	images[src].onload = function() {
+
+		if(++loadedImages >= numImages) {
+		//all images loaded
+		
+		//initalise();
+		//Game will initalise when logged in/name entered
+
+		//
+
+		//alert("loaded");
+		if(loaded == false){
+			draw();
+			loaded = true;
+		}
+
+
+		}
+
+};
+
+images[src].src = sources[src];
+
+}
+}
+
+loadImages(sources);
+
+
+
+function draw(){
+
+	
+	canvas.width = canvas.width
+
+	ctx.drawImage(images.head, 25, 50, 500, 500);
+	ctx.drawImage(images.hair, 25, 50, 500, 500);
+	ctx.drawImage(images.eyes, 25, 50, 500, 500);
+
+}
+
+
+function update(x){
+
+	switch(x) {
+
+			case 1:
+				colorImage(images.head,skin.white)
+
+		break;
+			case 2:
+
+				colorImage(images.head,skin.brown)
+		break;
+			case 3:
+
+				colorImage(images.hair,hair.blonde)
+		break;
+			case 4:
+
+				colorImage(images.hair,hair.brown)
+		break;
+
+	}
+	setTimeout(draw,300);
+
+}
+
+
+function reset(){
+
+	loadImages(sources);
+	setTimeout(draw,300);
+
+}
+
+
+
+  </script>
+
+
+
+
+
+
+
+</body>
+</html>
